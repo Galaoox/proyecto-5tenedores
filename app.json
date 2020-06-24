@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "tenedores",
-    "slug": "tenedores",
+    "name": "5tenedores",
+    "slug": "5tenedores",
     "platforms": [
       "ios",
       "android",
@@ -23,6 +23,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": ""
   }
 }
