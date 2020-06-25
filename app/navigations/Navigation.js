@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
+import { Icon } from 'react-native-elements';
 // Stacks
 import RestaurantsStack from "./RestaurantsStack";
 import FavoritesStack from "./FavoritesStack";
@@ -15,48 +15,94 @@ import SearchStack from "./SearchStack";
 const Tab = createBottomTabNavigator();
 
 export default function Navigation() {
-  /*todo tiene que estar contenido por el NavigationContainer para que funcione la navegacion
-        Dentro del tab deben ir los tab.screen que indicaran cada icono o cada opcion
-    */
-  return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="restaurants"
-          component={RestaurantsStack}
-          options={{
-            title: "Restaurantes",
-          }}
-        />
-        <Tab.Screen
-          name="favorites"
-          component={FavoritesStack}
-          options={{
-            title: "Favoritos",
-          }}
-        />
-        <Tab.Screen
-          name="top-restaurants"
-          component={TopRestaurantsStack}
-          options={{
-            title: "Top 5",
-          }}
-        />
-        <Tab.Screen
-          name="search"
-          component={SearchStack}
-          options={{
-            title: "Buscar",
-          }}
-        />
-        <Tab.Screen
-          name="account"
-          component={AccountStack}
-          options={{
-            title: "Cuenta",
-          }}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+    /*todo tiene que estar contenido por el NavigationContainer para que funcione la navegacion
+          Dentro del tab deben ir los tab.screen que indicaran cada icono o cada opcion
+      */
+
+
+    return (
+        <NavigationContainer>
+            <Tab.Navigator
+                initialRouteName="restaurants"
+                tabBarOptions={{
+                    inactiveTintColor: "#646464",
+                    activeTintColor: "#00a680"
+                }}
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ color }) => screenOptions(route, color),
+                })}
+            >
+                <Tab.Screen
+                    name="restaurants"
+                    component={RestaurantsStack}
+                    options={{
+                        title: "Restaurantes",
+                    }}
+                />
+                <Tab.Screen
+                    name="favorites"
+                    component={FavoritesStack}
+                    options={{
+                        title: "Favoritos",
+                    }}
+                />
+                <Tab.Screen
+                    name="top-restaurants"
+                    component={TopRestaurantsStack}
+                    options={{
+                        title: "Top 5",
+                    }}
+                />
+                <Tab.Screen
+                    name="search"
+                    component={SearchStack}
+                    options={{
+                        title: "Buscar",
+                    }}
+                />
+                <Tab.Screen
+                    name="account"
+                    component={AccountStack}
+                    options={{
+                        title: "Cuenta",
+                    }}
+                />
+            </Tab.Navigator>
+        </NavigationContainer>
+    );
+
+
+}
+
+
+
+/**
+ * Funcion que retorna el icono que se usara en la navegacion con el color
+ * @param {*} route 
+ * @param {*} color 
+ */
+function screenOptions(route, color) {
+    let iconName;
+    switch (route.name) {
+        case 'restaurants':
+            iconName = 'compass-outline'
+            break;
+        case 'favorites':
+            iconName = 'heart-outline'
+            break;
+        case 'top-restaurants':
+            iconName = 'star-outline'
+            break;
+        case 'search':
+            iconName = 'magnify'
+            break;
+        case 'account':
+            iconName = 'home-outline'
+            break;
+        default:
+            break;
+    }
+    return (
+        <Icon type="material-community" name={iconName} size={22} color={color} />
+    )
 }
