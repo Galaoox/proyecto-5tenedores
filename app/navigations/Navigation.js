@@ -78,7 +78,7 @@ export default function Navigation() {
 
 /**
  * Funcion que retorna el icono que se usara en la navegacion con el color
- * @param {*} route 
+ * @param {*} route identificador de la ruta
  * @param {*} color 
  */
 function screenOptions(route, color) {
