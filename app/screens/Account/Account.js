@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { View, Text } from "react-native";
-import * as firebase from 'firebase';
+import * as firebase from "firebase";
 // Components
-import UserGuest from './UserGuest';
-import UserLogged from './UserLogged';
-
+import UserGuest from "./UserGuest";
+import UserLogged from "./UserLogged";
+import Loading from "../../components/Loading";
 
 export default function Account() {
-    const [login, setLogin] = useState(null);
+  const [login, setLogin] = useState(null);
 
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged((user) => {
-            !user ? setLogin(false) : setLogin(true);
-        })
-    }, [])
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      !user ? setLogin(false) : setLogin(true);
+    });
+  }, []);
+  if (login === null) return <Loading isVisible={true} text="Cargando..." />;
 
-    if (login === null) return <Text>Cargando...</Text>
-
-    return login ? <UserLogged /> : <UserGuest />;
+  return login ? <UserLogged /> : <UserGuest />;
 }
