@@ -1,0 +1,117 @@
+import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { Input, Icon, Button } from "react-native-elements";
+import { isEmpty } from "lodash";
+import * as firebase from "firebase";
+import { validateEmail } from "../../utils/validations";
+import { useNavigation } from "@react-navigation/native";
+
+export default function LoginForm(props) {
+    const navigation = useNavigation();
+    const { toastRef } = props;
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [formData, setFormData] = useState(defaultFormValue());
+    const onChange = (event, type) => {
+        setFormData({ ...formData, [type]: event.nativeEvent.text });
+    };
+
+    const onSubmit = () => {
+        if (isEmpty(formData.email) || isEmpty(formData.password)) {
+            toastRef.current.show("Todos los campos son requeridos");
+        } else if (validateEmail(formData.email)) {
+            toastRef.current.show("El correo electronico es invalido");
+        } else {
+            setLoading(true);
+            firebase
+                .auth()
+                .signInWithEmailAndPassword(formData.email, formData.password)
+                .then((response) => {
+                    setLoading(false);
+                    navigation.navigate("account");
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    toastRef.current.show(
+                        "Correo electronico o contraseña incorrectos"
+                    );
+                });
+        }
+    };
+
+    return (
+        <View style={styles.formContainer}>
+            <Input
+                label="Correo electronico"
+                placeholder="Correo electronico"
+                containerStyle={styles.inputForm}
+                rightIcon={
+                    <Icon
+                        type="material-community"
+                        iconStyle={styles.iconRight}
+                        name="at"
+                    />
+                }
+                onChange={(event) => {
+                    onChange(event, "email");
+                }}
+            />
+            <Input
+                label="Contraseña"
+                placeholder="Contraseña"
+                containerStyle={styles.inputForm}
+                secureTextEntry={showPassword}
+                rightIcon={
+                    <Icon
+                        type="material-community"
+                        iconStyle={styles.iconRight}
+                        name={!showPassword ? "eye-off-outline" : "eye-outline"}
+                        onPress={() => {
+                            setShowPassword(!showPassword);
+                        }}
+                    />
+                }
+                onChange={(event) => {
+                    onChange(event, "password");
+                }}
+            />
+            <Button
+                title="Iniciar sesión"
+                containerStyle={styles.btnContainerLogin}
+                buttonStyle={styles.btnLogin}
+                onPress={onSubmit}
+            />
+            <Loading isVisible={loading} text="Creando cuenta" />
+        </View>
+    );
+}
+
+function defaultFormValue() {
+    return {
+        email: "",
+        password: "",
+    };
+}
+
+const styles = StyleSheet.create({
+    formContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 30,
+    },
+    inputForm: {
+        width: "100%",
+        marginTop: 20,
+    },
+    btnContainerLogin: {
+        marginTop: 20,
+        width: "95%",
+    },
+    btnLogin: {
+        backgroundColor: "#00a680",
+    },
+    iconRight: {
+        color: "#c1c1c1",
+    },
+});
