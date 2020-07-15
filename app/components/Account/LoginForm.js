@@ -5,6 +5,7 @@ import { isEmpty } from "lodash";
 import * as firebase from "firebase";
 import { validateEmail } from "../../utils/validations";
 import { useNavigation } from "@react-navigation/native";
+import Loading from "../Loading";
 
 export default function LoginForm(props) {
     const navigation = useNavigation();
