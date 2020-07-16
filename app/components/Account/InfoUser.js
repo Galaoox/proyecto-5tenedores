@@ -10,7 +10,7 @@ export default function InfoUser(props) {
         userInfo: { uid, photoURL, displayName, email },
         toastRef,
     } = props;
-
+    console.log(photoURL);
     const changeAvatar = async () => {
         const resultsPermissions = await Permissions.askAsync(
             Permissions.CAMERA_ROLL
@@ -31,7 +31,9 @@ export default function InfoUser(props) {
                 toastRef.current.show("Has cerrado la seleccipón de imagenes");
             } else {
                 uploadImage(result.uri)
-                    .then(() => {})
+                    .then(() => {
+                        updateUrl();
+                    })
                     .catch(() => {
                         toastRef.current.show("Error actualizar el avatar");
                     });
@@ -47,6 +49,22 @@ export default function InfoUser(props) {
             .ref()
             .child("avatar/" + uid);
         return ref.put(blob);
+    };
+
+    const updateUrl = () => {
+        firebase
+            .storage()
+            .ref("avatar/" + uid)
+            .getDownloadURL()
+            .then(async (response) => {
+                console.log(response);
+                const update = {
+                    photoURL: response,
+                };
+                console.log(update, uid);
+                await firebase.auth().currentUser.updateProfile(update);
+            })
+            .catch(() => {});
     };
 
     return (
