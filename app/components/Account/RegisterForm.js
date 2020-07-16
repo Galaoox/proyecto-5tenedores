@@ -72,7 +72,7 @@ export default function RegisterForm(props) {
             />
             <Input
                 label="Contraseña"
-                secureTextEntry={showPassword}
+                secureTextEntry={!showPassword}
                 placeholder="Contraseña"
                 containerStyle={styles.inputForm}
                 onChange={(event) => onChange(event, "password")}
@@ -89,7 +89,7 @@ export default function RegisterForm(props) {
             />
             <Input
                 label="Repetir contraseña"
-                secureTextEntry={showRepeatPassword}
+                secureTextEntry={!showRepeatPassword}
                 placeholder="Repetir contraseña"
                 containerStyle={styles.inputForm}
                 onChange={(event) => onChange(event, "repeatPassord")}

@@ -61,7 +61,7 @@ export default function LoginForm(props) {
                 label="Contraseña"
                 placeholder="Contraseña"
                 containerStyle={styles.inputForm}
-                secureTextEntry={showPassword}
+                secureTextEntry={!showPassword}
                 rightIcon={
                     <Icon
                         type="material-community"
