@@ -21,8 +21,8 @@ export default function InfoUser(props) {
                 showAccessory
             />
             <View>
-                <Text>Erick Andres Vergara Noriega</Text>
-                <Text>erickandres30@gmail.com</Text>
+                <Text>{displayName ? displayName : "Anónimo"}</Text>
+                <Text>{email ? email : "Social login"}</Text>
             </View>
         </View>
     );
