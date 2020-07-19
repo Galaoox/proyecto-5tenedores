@@ -4,7 +4,7 @@ import { Input, Button } from "react-native-elements";
 import * as firebase from "firebase";
 import { validateEmail } from "../../utils/validations";
 import { reauthenticate } from "../../utils/api";
-import { size } from "lodash";
+import { iconPassword, iconEmail } from "../../utils/common";
 
 export default function ChangeDisplayNameForm(props) {
     const { email, setShowModal, toastRef, setReloadUserInfo } = props;
@@ -70,11 +70,7 @@ export default function ChangeDisplayNameForm(props) {
                 label="Nuevo correo electronico"
                 placeholder="Nuevo correo electronico"
                 containerStyle={styles.input}
-                rightIcon={{
-                    type: "material-community",
-                    name: "at",
-                    color: "#c2c2c2",
-                }}
+                rightIcon={iconEmail}
                 defaultValue={email || ""}
                 onChange={(event) => onChange(event, "email")}
                 errorMessage={errors.email}
@@ -83,12 +79,7 @@ export default function ChangeDisplayNameForm(props) {
                 label="Contraseña"
                 placeholder="Contraseña"
                 containerStyle={styles.input}
-                rightIcon={{
-                    type: "material-community",
-                    name: !showPassword ? "eye-off-outline" : "eye-outline",
-                    color: "#c2c2c2",
-                    onPress: () => setShowPassword(!showPassword),
-                }}
+                rightIcon={iconPassword(showPassword, setShowPassword)}
                 secureTextEntry={!showPassword}
                 onChange={(event) => onChange(event, "password")}
                 errorMessage={errors.password}

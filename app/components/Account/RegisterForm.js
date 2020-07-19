@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
-import Loading from "../../components/Loading";
+import Loading from "../Loading";
 import { validateEmail } from "../../utils/validations";
+import { iconEmail, iconPassword } from "../../utils/common";
+
 import { size, isEmpty } from "lodash";
 import * as firebase from "firebase";
 import { useNavigation } from "@react-navigation/native";
@@ -62,13 +64,7 @@ export default function RegisterForm(props) {
                 placeholder="Correo electronico"
                 containerStyle={styles.inputForm}
                 onChange={(event) => onChange(event, "email")}
-                rightIcon={
-                    <Icon
-                        type="material-community"
-                        iconStyle={styles.iconRight}
-                        name="at"
-                    />
-                }
+                rightIcon={iconEmail}
             />
             <Input
                 label="Contraseña"
@@ -76,16 +72,7 @@ export default function RegisterForm(props) {
                 placeholder="Contraseña"
                 containerStyle={styles.inputForm}
                 onChange={(event) => onChange(event, "password")}
-                rightIcon={
-                    <Icon
-                        type="material-community"
-                        iconStyle={styles.iconRight}
-                        name={!showPassword ? "eye-off-outline" : "eye-outline"}
-                        onPress={() => {
-                            setShowPassword(!showPassword);
-                        }}
-                    />
-                }
+                rightIcon={iconPassword(showPassword, setShowPassword)}
             />
             <Input
                 label="Repetir contraseña"
@@ -93,20 +80,10 @@ export default function RegisterForm(props) {
                 placeholder="Repetir contraseña"
                 containerStyle={styles.inputForm}
                 onChange={(event) => onChange(event, "repeatPassord")}
-                rightIcon={
-                    <Icon
-                        type="material-community"
-                        iconStyle={styles.iconRight}
-                        name={
-                            !showRepeatPassword
-                                ? "eye-off-outline"
-                                : "eye-outline"
-                        }
-                        onPress={() => {
-                            setShowRepeatPassword(!showRepeatPassword);
-                        }}
-                    />
-                }
+                rightIcon={iconPassword(
+                    showRepeatPassword,
+                    setShowRepeatPassword
+                )}
             />
             <Button
                 title="Unirse"

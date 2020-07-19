@@ -4,6 +4,7 @@ import { Input, Icon, Button } from "react-native-elements";
 import { isEmpty } from "lodash";
 import * as firebase from "firebase";
 import { validateEmail } from "../../utils/validations";
+import { iconPassword, iconEmail } from "../../utils/common";
 import { useNavigation } from "@react-navigation/native";
 import Loading from "../Loading";
 
@@ -46,13 +47,7 @@ export default function LoginForm(props) {
                 label="Correo electronico"
                 placeholder="Correo electronico"
                 containerStyle={styles.inputForm}
-                rightIcon={
-                    <Icon
-                        type="material-community"
-                        iconStyle={styles.iconRight}
-                        name="at"
-                    />
-                }
+                rightIcon={iconEmail}
                 onChange={(event) => {
                     onChange(event, "email");
                 }}
@@ -62,16 +57,7 @@ export default function LoginForm(props) {
                 placeholder="Contraseña"
                 containerStyle={styles.inputForm}
                 secureTextEntry={!showPassword}
-                rightIcon={
-                    <Icon
-                        type="material-community"
-                        iconStyle={styles.iconRight}
-                        name={!showPassword ? "eye-off-outline" : "eye-outline"}
-                        onPress={() => {
-                            setShowPassword(!showPassword);
-                        }}
-                    />
-                }
+                rightIcon={iconPassword(showPassword, setShowPassword)}
                 onChange={(event) => {
                     onChange(event, "password");
                 }}
@@ -111,8 +97,5 @@ const styles = StyleSheet.create({
     },
     btnLogin: {
         backgroundColor: "#00a680",
-    },
-    iconRight: {
-        color: "#c1c1c1",
     },
 });

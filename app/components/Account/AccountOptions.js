@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ListItem } from "react-native-elements";
 import Modal from "../Modal";
-import ChangeDisplayNameForm from "../Account/ChangeDisplayNameForm";
-import ChangeEmailForm from "../Account/ChangeEmailForm";
+import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
+import ChangeEmailForm from "./ChangeEmailForm";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 export default function AccountOptions(props) {
     const { toastRef, userInfo, setReloadUserInfo } = props;
@@ -32,7 +33,12 @@ export default function AccountOptions(props) {
                 );
                 break;
             case "password":
-                setRenderComponent(<Text>Contraseña</Text>);
+                setRenderComponent(
+                    <ChangePasswordForm
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                    />
+                );
                 break;
 
             default:
