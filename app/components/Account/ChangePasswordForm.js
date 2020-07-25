@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Input, Button } from "react-native-elements";
 import * as firebase from "firebase";
-import { validateEmail } from "../../utils/validations";
 import { reauthenticate } from "../../utils/api";
 import { iconPassword } from "../../utils/common";
 import { size } from "lodash";
@@ -18,16 +17,68 @@ export default function ChangePasswordForm(props) {
     const onChange = (event, type) => {
         setFormData({ ...formData, [type]: event.nativeEvent.text });
     };
-    const onSubmit = () => {
-        set;
+    const onSubmit = async () => {
+        let isSetError = true;
+        let errorsTemp = {};
         setErrors({});
         if (
             !formData.password ||
             !formData.confirmPassword ||
             !formData.newPassword
         ) {
+            errorsTemp = {
+                password: formData.password
+                    ? ""
+                    : "La contraseña es requerida.",
+                newPassword: formData.newPassword
+                    ? ""
+                    : "La contraseña es requerida.",
+                confirmPassword: formData.confirmPassword
+                    ? ""
+                    : "La contraseña es requerida.",
+            };
+        } else if (formData.confirmPassword !== formData.newPassword) {
+            errorsTemp = {
+                newPassword: "Las contraseñas no son iguales.",
+                confirmPassword: "Las contraseñas no son iguales.",
+            };
+        } else if (size(formData.newPassword) < 6) {
+            errorsTemp = {
+                newPassword: "La contraseña debe tener minimo 6 caracteres.",
+                confirmPassword:
+                    "La contraseña debe tener minimo 6 caracteres.",
+            };
+        } else {
+            setIsLoading(true);
+            await reauthenticate(formData.password)
+                .then(async () => {
+                    await firebase
+                        .auth()
+                        .currentUser.updatePassword(formData.newPassword)
+                        .then(() => {
+                            isSetError = false;
+                            setIsLoading(false);
+                            firebase.auth().signOut();
+                            toastRef.current.show(
+                                "Contraseña actualizada correctamente"
+                            );
+                            setShowModal(false);
+                        })
+                        .catch(() => {
+                            errorsTemp = {
+                                other: "Error al actualizar la contraseña.",
+                            };
+                            setIsLoading(false);
+                        });
+                })
+                .catch(() => {
+                    errorsTemp = {
+                        password: "La contraseña ingresada es incorrecta.",
+                    };
+                    setIsLoading(false);
+                });
         }
-        console.log(formData);
+        isSetError && setErrors(errorsTemp);
     };
     return (
         <View style={styles.view}>
@@ -68,6 +119,7 @@ export default function ChangePasswordForm(props) {
                 onPress={onSubmit}
                 loading={isLoading}
             />
+            <Text style={styles.error}>{errors.other}</Text>
         </View>
     );
 }
@@ -94,5 +146,9 @@ const styles = StyleSheet.create({
     },
     btn: {
         backgroundColor: "#00a680",
+    },
+    error: {
+        color: "#FF0000",
+        textAlign: "center",
     },
 });
