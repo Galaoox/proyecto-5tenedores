@@ -10,7 +10,10 @@ export default function AddRestaurant(props) {
     const [isLoading, setIsLoading] = useState(false);
     return (
         <View>
-            <AddRestaurantForm />
+            <AddRestaurantForm
+                setIsLoading={setIsLoading}
+                toastRef={toastRef}
+            />
             <Toast ref={toastRef} position="center" opacity={0.9} />
             <Loading isVisible={isLoading} text="Creando restaurante" />
         </View>
