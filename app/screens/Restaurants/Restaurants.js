@@ -4,11 +4,10 @@ import { Icon } from "react-native-elements";
 import { colors } from "../../theme/colors";
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
-import { useNavigation } from "@react-navigation/native";
 
-export default function Restaurants() {
+export default function Restaurants(props) {
+    const { navigation } = props;
     const [user, setUser] = useState(null);
-    const navigation = useNavigation();
     useEffect(() => {
         firebase.auth().onAuthStateChanged((userInfo) => {
             setUser(userInfo);
