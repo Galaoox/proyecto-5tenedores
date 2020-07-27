@@ -10,7 +10,7 @@ import {
 import { Icon, Avatar, Image, Input, Button } from "react-native-elements";
 import { colors } from "../../theme/colors";
 
-export default function AddREstaurantForm(props) {
+export default function AddRestaurantForm(props) {
     const { setIsLoading, toastRef } = props;
     const addRestaurant = () => {
         console.log({
@@ -31,6 +31,7 @@ export default function AddREstaurantForm(props) {
                 setRestaurantAdress={setRestaurantAdress}
                 setRestaurantDescription={setRestaurantDescription}
             />
+            <UploadImage/>
             <Button
                 title="Cambiar correo electronico"
                 buttonStyle={styles.btn}
@@ -75,6 +76,17 @@ function FormAdd(props) {
     );
 }
 
+function UploadImage(){
+    const imageSelected = ()=>{
+        console.log('Seleccionada imagen')
+    }
+    return (
+        <View style={styles.viewImage}>
+            <Icon type="material-community" name="camera" color="#7A7A7A" containerStyle={styles.containerIcon} />
+        </View>
+    )
+}
+
 const styles = StyleSheet.create({
     scrollView: {
         height: "100%",
@@ -95,5 +107,17 @@ const styles = StyleSheet.create({
     btn: {
         backgroundColor: colors.green,
         margin: 20,
+    },
+    viewImage:{
+        flexDirection: "row",
+        marginHorizontal: 20,
+        marginTop: 30
+    },
+    containerIcon:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 70,
+        width: 70,
+        backgroundColor: "#e3e3e3"
     },
 });
