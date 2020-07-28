@@ -13,23 +13,19 @@ import { colors } from "../../theme/colors";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import { size, remove } from "lodash";
+import Modal from "../Modal";
 
 const widthScreen = Dimensions.get("window").width; // asi obtengo el ancho de la pantalla
 
 export default function AddRestaurantForm(props) {
     const { setIsLoading, toastRef } = props;
-    const addRestaurant = () => {
-        console.log({
-            restaurantName,
-            restaurantAdress,
-            restaurantDescription,
-        });
-    };
+    const addRestaurant = () => {};
 
     const [restaurantName, setRestaurantName] = useState("");
     const [restaurantAdress, setRestaurantAdress] = useState("");
     const [restaurantDescription, setRestaurantDescription] = useState("");
     const [imagesSelected, setImagesSelected] = useState([]);
+    const [isVisibleMap, setIsVisibleMap] = useState(false);
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -38,6 +34,7 @@ export default function AddRestaurantForm(props) {
                 setRestaurantName={setRestaurantName}
                 setRestaurantAdress={setRestaurantAdress}
                 setRestaurantDescription={setRestaurantDescription}
+                setIsVisibleMap={setIsVisibleMap}
             />
             <UploadImage
                 toastRef={toastRef}
@@ -48,6 +45,10 @@ export default function AddRestaurantForm(props) {
                 title="Cambiar correo electronico"
                 buttonStyle={styles.btn}
                 onPress={addRestaurant}
+            />
+            <Map
+                isVisibleMap={isVisibleMap}
+                setIsVisibleMap={setIsVisibleMap}
             />
         </ScrollView>
     );
@@ -74,6 +75,7 @@ function FormAdd(props) {
         setRestaurantName,
         setRestaurantAdress,
         setRestaurantDescription,
+        setIsVisibleMap,
     } = props;
     return (
         <View styles={styles.viewForm}>
@@ -90,6 +92,12 @@ function FormAdd(props) {
                 onChange={(event) =>
                     setRestaurantAdress(event.nativeEvent.text)
                 }
+                rightIcon={{
+                    type: "material-community",
+                    name: "google-maps",
+                    color: "#c2c2c2",
+                    onPress: () => setIsVisibleMap(true),
+                }}
             />
             <Input
                 label="Descripción"
@@ -101,6 +109,15 @@ function FormAdd(props) {
                 }
             />
         </View>
+    );
+}
+
+function Map(props) {
+    const { isVisibleMap, setIsVisibleMap } = props;
+    return (
+        <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
+            <Text>Mapa</Text>
+        </Modal>
     );
 }
 
