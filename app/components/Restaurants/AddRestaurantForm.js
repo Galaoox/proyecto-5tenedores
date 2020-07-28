@@ -14,6 +14,8 @@ import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import { size, remove } from "lodash";
 
+const widthScreen = Dimensions.get("window").width; // asi obtengo el ancho de la pantalla
+
 export default function AddRestaurantForm(props) {
     const { setIsLoading, toastRef } = props;
     const addRestaurant = () => {
@@ -31,6 +33,7 @@ export default function AddRestaurantForm(props) {
 
     return (
         <ScrollView style={styles.scrollView}>
+            <ImageRestaurant imageRestaurant={imagesSelected[0]} />
             <FormAdd
                 setRestaurantName={setRestaurantName}
                 setRestaurantAdress={setRestaurantAdress}
@@ -47,6 +50,22 @@ export default function AddRestaurantForm(props) {
                 onPress={addRestaurant}
             />
         </ScrollView>
+    );
+}
+
+function ImageRestaurant(props) {
+    const { imageRestaurant } = props;
+    return (
+        <View style={styles.viewPhoto}>
+            <Image
+                source={
+                    imageRestaurant
+                        ? { uri: imageRestaurant }
+                        : require("../../../assets/img/no-image.png")
+                }
+                style={{ width: widthScreen, height: 200 }}
+            />
+        </View>
     );
 }
 
@@ -199,5 +218,10 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         marginRight: 10,
+    },
+    viewPhoto: {
+        alignItems: "center",
+        height: 200,
+        marginBottom: 20,
     },
 });
