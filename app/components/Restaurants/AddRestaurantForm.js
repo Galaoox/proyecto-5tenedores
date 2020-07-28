@@ -115,7 +115,7 @@ function UploadImage(props) {
     };
     return (
         <View style={styles.viewImage}>
-            {size(imagesSelected) < 4 && (
+            {size(imagesSelected) < 5 && (
                 <TouchableOpacity onPress={imageSelected}>
                     <Icon
                         type="material-community"
@@ -125,14 +125,15 @@ function UploadImage(props) {
                     />
                 </TouchableOpacity>
             )}
-
-            {imagesSelected.map((image, index) => (
-                <Avatar
-                    source={{ uri: image }}
-                    style={styles.miniatureStyle}
-                    key={index}
-                />
-            ))}
+            <ScrollView horizontal={true}>
+                {imagesSelected.map((image, index) => (
+                    <Avatar
+                        source={{ uri: image }}
+                        style={styles.miniatureStyle}
+                        key={index}
+                    />
+                ))}
+            </ScrollView>
         </View>
     );
 }
@@ -169,6 +170,10 @@ const styles = StyleSheet.create({
         height: 70,
         width: 70,
         backgroundColor: "#e3e3e3",
+    },
+    containerImages: {
+        flex: 1,
+        flexDirection: "row",
     },
     miniatureStyle: {
         width: 70,
