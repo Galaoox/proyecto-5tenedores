@@ -171,10 +171,6 @@ const styles = StyleSheet.create({
         width: 70,
         backgroundColor: "#e3e3e3",
     },
-    containerImages: {
-        flex: 1,
-        flexDirection: "row",
-    },
     miniatureStyle: {
         width: 70,
         height: 70,
