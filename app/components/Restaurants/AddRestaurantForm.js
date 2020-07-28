@@ -12,7 +12,7 @@ import { Icon, Avatar, Image, Input, Button } from "react-native-elements";
 import { colors } from "../../theme/colors";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
-import { size } from "lodash";
+import { size, remove } from "lodash";
 
 export default function AddRestaurantForm(props) {
     const { setIsLoading, toastRef } = props;
@@ -28,7 +28,6 @@ export default function AddRestaurantForm(props) {
     const [restaurantAdress, setRestaurantAdress] = useState("");
     const [restaurantDescription, setRestaurantDescription] = useState("");
     const [imagesSelected, setImagesSelected] = useState([]);
-    console.log(imagesSelected);
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -113,6 +112,26 @@ function UploadImage(props) {
             }
         }
     };
+
+    const removeImage = (image) => {
+        Alert.alert(
+            "Eliminar imagen",
+            "¿Estas seguro de que quieres eliminar la imagen?",
+            [
+                { text: "Cancelar", style: "cancel" },
+                {
+                    text: "Eliminar",
+                    style: "default",
+                    onPress: () => {
+                        const result = imagesSelected.filter(
+                            (imageElement) => imageElement != image
+                        );
+                        setImagesSelected(result);
+                    },
+                },
+            ]
+        );
+    };
     return (
         <View style={styles.viewImage}>
             {size(imagesSelected) < 5 && (
@@ -127,11 +146,16 @@ function UploadImage(props) {
             )}
             <ScrollView horizontal={true}>
                 {imagesSelected.map((image, index) => (
-                    <Avatar
-                        source={{ uri: image }}
-                        style={styles.miniatureStyle}
+                    <TouchableOpacity
                         key={index}
-                    />
+                        onLongPress={() => removeImage(image)}
+                    >
+                        <Avatar
+                            source={{ uri: image }}
+                            style={styles.miniatureStyle}
+                            key={index}
+                        />
+                    </TouchableOpacity>
                 ))}
             </ScrollView>
         </View>
