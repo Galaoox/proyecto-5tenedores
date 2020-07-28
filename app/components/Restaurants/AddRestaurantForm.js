@@ -6,9 +6,13 @@ import {
     ScrollView,
     Alert,
     Dimensions,
+    TouchableOpacity,
 } from "react-native";
 import { Icon, Avatar, Image, Input, Button } from "react-native-elements";
 import { colors } from "../../theme/colors";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
+import { size } from "lodash";
 
 export default function AddRestaurantForm(props) {
     const { setIsLoading, toastRef } = props;
@@ -23,6 +27,8 @@ export default function AddRestaurantForm(props) {
     const [restaurantName, setRestaurantName] = useState("");
     const [restaurantAdress, setRestaurantAdress] = useState("");
     const [restaurantDescription, setRestaurantDescription] = useState("");
+    const [imagesSelected, setImagesSelected] = useState([]);
+    console.log(imagesSelected);
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -31,7 +37,11 @@ export default function AddRestaurantForm(props) {
                 setRestaurantAdress={setRestaurantAdress}
                 setRestaurantDescription={setRestaurantDescription}
             />
-            <UploadImage/>
+            <UploadImage
+                toastRef={toastRef}
+                setImagesSelected={setImagesSelected}
+                imagesSelected={imagesSelected}
+            />
             <Button
                 title="Cambiar correo electronico"
                 buttonStyle={styles.btn}
@@ -76,15 +86,55 @@ function FormAdd(props) {
     );
 }
 
-function UploadImage(){
-    const imageSelected = ()=>{
-        console.log('Seleccionada imagen')
-    }
+function UploadImage(props) {
+    const { toastRef, setImagesSelected, imagesSelected } = props;
+    const imageSelected = async () => {
+        const resultPermissions = await Permissions.askAsync(
+            Permissions.CAMERA_ROLL
+        );
+
+        if (resultPermissions == "denied") {
+            await toastRef.current.show(
+                "Es necesario aceptar los permisos de la camara",
+                3000
+            );
+        } else {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+            });
+            if (result.cancelled) {
+                await toastRef.current.show(
+                    "Has cerrado  la galeria sin seleccionar una imagen",
+                    3000
+                );
+            } else {
+                await setImagesSelected([...imagesSelected, result.uri]);
+            }
+        }
+    };
     return (
         <View style={styles.viewImage}>
-            <Icon type="material-community" name="camera" color="#7A7A7A" containerStyle={styles.containerIcon} />
+            {size(imagesSelected) < 4 && (
+                <TouchableOpacity onPress={imageSelected}>
+                    <Icon
+                        type="material-community"
+                        name="camera"
+                        color="#7A7A7A"
+                        containerStyle={styles.containerIcon}
+                    />
+                </TouchableOpacity>
+            )}
+
+            {imagesSelected.map((image, index) => (
+                <Avatar
+                    source={{ uri: image }}
+                    style={styles.miniatureStyle}
+                    key={index}
+                />
+            ))}
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -108,16 +158,21 @@ const styles = StyleSheet.create({
         backgroundColor: colors.green,
         margin: 20,
     },
-    viewImage:{
+    viewImage: {
         flexDirection: "row",
         marginHorizontal: 20,
-        marginTop: 30
+        marginTop: 30,
     },
-    containerIcon:{
-        alignItems: 'center',
-        justifyContent: 'center',
+    containerIcon: {
+        alignItems: "center",
+        justifyContent: "center",
         height: 70,
         width: 70,
-        backgroundColor: "#e3e3e3"
+        backgroundColor: "#e3e3e3",
+    },
+    miniatureStyle: {
+        width: 70,
+        height: 70,
+        marginRight: 10,
     },
 });
