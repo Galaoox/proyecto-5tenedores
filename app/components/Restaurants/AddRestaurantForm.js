@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -13,6 +13,7 @@ import { colors } from "../../theme/colors";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 import { size, remove } from "lodash";
+import * as Location from "expo-location";
 import Modal from "../Modal";
 
 const widthScreen = Dimensions.get("window").width; // asi obtengo el ancho de la pantalla
@@ -49,6 +50,7 @@ export default function AddRestaurantForm(props) {
             <Map
                 isVisibleMap={isVisibleMap}
                 setIsVisibleMap={setIsVisibleMap}
+                toastRef={toastRef}
             />
         </ScrollView>
     );
@@ -113,7 +115,31 @@ function FormAdd(props) {
 }
 
 function Map(props) {
-    const { isVisibleMap, setIsVisibleMap } = props;
+    const { isVisibleMap, setIsVisibleMap, toastRef } = props;
+    const [location, setLocation] = useState(null);
+    useEffect(() => {
+        (async () => {
+            const resultPermissions = await Permissions.askAsync(
+                Permissions.LOCATION
+            );
+            const statusPermissions =
+                resultPermissions.permissions.location.status;
+            if (statusPermissions !== "granted") {
+                await toastRef.current.show(
+                    "Es necesario aceptar los permisos de la localización",
+                    3000
+                );
+            } else {
+                const loc = await Location.getCurrentPositionAsync({});
+                setLocation({
+                    latitude: loc.coords.latitude,
+                    longitude: loc.coords.longitude,
+                    latitudeDelta: 0.001,
+                    longitudeDelta: 0.001,
+                });
+            }
+        })();
+    }, []);
     return (
         <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
             <Text>Mapa</Text>
