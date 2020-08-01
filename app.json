@@ -19,6 +19,12 @@
             "supportsTablet": true
         },
         "android": {
+            "package": "com.evergarano.cincotenedores",
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyBCRsJgDovD75cdkGILll2Cl-mn2RCILvY"
+                }
+            },
             "permissions": [
                 "CAMERA_ROLL",
                 "READ_EXTERNAL_STORAGE",
