@@ -112,7 +112,7 @@ function FormAdd(props) {
                 rightIcon={{
                     type: "material-community",
                     name: "google-maps",
-                    color: "#c2c2c2",
+                    color: locationRestaurant ? colors.green : "#c2c2c2",
                     onPress: () => setIsVisibleMap(true),
                 }}
             />
