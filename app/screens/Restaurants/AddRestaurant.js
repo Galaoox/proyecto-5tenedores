@@ -13,6 +13,7 @@ export default function AddRestaurant(props) {
             <AddRestaurantForm
                 setIsLoading={setIsLoading}
                 toastRef={toastRef}
+                navigation={navigation}
             />
             <Toast ref={toastRef} position="center" opacity={0.9} />
             <Loading isVisible={isLoading} text="Creando restaurante" />

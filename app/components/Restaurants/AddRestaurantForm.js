@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
     View,
-    Text,
     StyleSheet,
     ScrollView,
     Alert,
@@ -16,11 +15,20 @@ import { size, remove } from "lodash";
 import * as Location from "expo-location";
 import MapView from "react-native-maps";
 import Modal from "../Modal";
+import uuid from "random-uuid-v4";
+import firebase from "firebase/app";
+import { firebaseApp } from "../../utils/firebase";
+import "firebase/storage";
+import "firebase/firestore";
+const db = firebase.firestore(firebaseApp);
 
 const widthScreen = Dimensions.get("window").width; // asi obtengo el ancho de la pantalla
 
 export default function AddRestaurantForm(props) {
-    const { setIsLoading, toastRef } = props;
+    const { setIsLoading, toastRef, navigation } = props;
+    /**
+     * valida que el formulario este diligenciado y envia los datos a firebase
+     */
     const addRestaurant = () => {
         if (!restaurantName || !restaurantAdress || !restaurantDescription) {
             toastRef.current.show("Todos los campos son obligatorios");
@@ -29,8 +37,67 @@ export default function AddRestaurantForm(props) {
         } else if (!locationRestaurant) {
             toastRef.current.show("Seleccione la ubicación del restaurante");
         } else {
-            toastRef.current.show("GOOD");
+            setIsLoading(true);
+            uploadImageStorage()
+                .then((images) => {
+                    db.collection("restaurants")
+                        .add({
+                            name: restaurantName,
+                            address: restaurantAdress,
+                            description: restaurantDescription,
+                            location: locationRestaurant,
+                            images: images,
+                            rating: 0,
+                            ratingTotal: 0,
+                            quantityVoting: 0,
+                            createAt: new Date(),
+                            createdBy: firebase.auth().currentUser.uid,
+                        })
+                        .then(() => {
+                            setIsLoading(false);
+                            navigation.navigate("restaurants");
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            setIsLoading(false);
+                            toastRef.current.show(
+                                "Error al subir el restaurante"
+                            );
+                        });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setIsLoading(false);
+                });
         }
+    };
+
+    /**
+     * obtiene el blob de las imagenes seleccionadas y las envia al storage de firebase
+     */
+    const uploadImageStorage = async () => {
+        const imageBlob = [];
+        console.log("entro a uploadImageStorage");
+        await Promise.all(
+            imagesSelected.map(async (image) => {
+                const response = await fetch(image);
+                const blob = await response.blob();
+                const ref = await firebase
+                    .storage()
+                    .ref("restaurants")
+                    .child(uuid());
+                await ref.put(blob).then(async (result) => {
+                    await firebase
+                        .storage()
+                        .ref(`restaurants/${result.metadata.name}`)
+                        .getDownloadURL()
+                        .then((photoUrl) => {
+                            imageBlob.push(photoUrl);
+                        });
+                });
+            })
+        );
+        return imageBlob;
     };
 
     const [restaurantName, setRestaurantName] = useState("");
