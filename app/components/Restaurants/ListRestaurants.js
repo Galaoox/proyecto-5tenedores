@@ -1,16 +1,21 @@
 import React from "react";
 import {ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Image} from 'react-native-elements';
+import {useNavigation} from '@react-navigation/native';
 import {size} from 'lodash';
 import {ellipsis} from "../../utils/common";
 
 export default function ListRestaurants(props) {
-    const {restaurants} = props;
+    const {restaurants, handleMore, isLoading} = props;
+    const navigation = useNavigation();
     return (<View>
         {size(restaurants) > 0 ? (
             <FlatList data={restaurants}
-                      renderItem={(restaurant) => <Restaurant restaurant={restaurant}/>}
+                      renderItem={(restaurant) => <Restaurant restaurant={restaurant} navigation={navigation}/>}
                       keyExtractor={(item, index) => index.toString()}
+                      onEndReachedThreshold={0.5}
+                      onEndReached={handleMore}
+                      ListFooterComponent={<FooterList isLoading={isLoading}/>}
             />
         ) : (<View style={styles.loaderRestaurants}>
             <ActivityIndicator size="large"/>
@@ -20,11 +25,12 @@ export default function ListRestaurants(props) {
 }
 
 function Restaurant(props) {
-    const {restaurant} = props;
-    const {images, name, description, address} = restaurant.item;
-    const imageRestaurant = images[0];
+    const {restaurant, navigation} = props;
+    const {images, name, description, address, id} = restaurant.item;
+    const imageRestaurant = images && images.length ? images[0] : null;
     const goRestaurant = () => {
         console.log("oki");
+        navigation.navigate('restaurant', {id, name})
     }
 
     return (
@@ -38,7 +44,7 @@ function Restaurant(props) {
                         style={styles.imageRestaurant}
                     />
                 </View>
-                <View >
+                <View>
                     <Text style={styles.restaurantName}>{name}</Text>
                     <Text style={styles.restaurantAddress}>{address}</Text>
                     <Text style={styles.restaurantDescription}>{ellipsis(description, 60)}</Text>
@@ -46,6 +52,14 @@ function Restaurant(props) {
             </View>
         </TouchableOpacity>
     )
+}
+
+function FooterList(props) {
+    const {isLoading} = props;
+    return isLoading ?
+        (<View style={styles.loaderRestaurants}><ActivityIndicator size="large"/></View>) :
+        (<View style={styles.notFoundRestaurant}><Text>No hay mas restaurantes</Text></View>);
+
 }
 
 const styles = StyleSheet.create({
@@ -75,5 +89,10 @@ const styles = StyleSheet.create({
         paddingTop: 3,
         color: 'grey',
         width: 300
+    },
+    notFoundRestaurant: {
+        marginTop: 10,
+        marginBottom: 20,
+        alignItems: "center"
     }
 });

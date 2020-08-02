@@ -16,6 +16,6 @@ export const iconEmail = {
 /**
  * Recorta un string dependiendo de la cantidad de caracteres que se indique
  */
-export function ellipsis(text, numberCharacters){
-    return text.length > numberCharacters ? text.substring(0,numberCharacters) + '...' : text; 
+export function ellipsis(text, numberCharacters) {
+    return text && text.length > numberCharacters ? text.substring(0, numberCharacters) + '...' : text;
 }

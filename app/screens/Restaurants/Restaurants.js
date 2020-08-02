@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {Icon} from "react-native-elements";
 import {colors} from "../../theme/colors";
@@ -7,6 +7,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import {size} from "lodash";
 import ListRestaurants from "../../components/Restaurants/ListRestaurants";
+import {useFocusEffect} from '@react-navigation/native';
 
 const db = firebase.firestore(firebaseApp);
 
@@ -17,7 +18,7 @@ export default function Restaurants(props) {
     const [totalRestaurants, setTotalRestaurants] = useState(0);
     const [startRestaurants, setStartRestaurants] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const limitRestaurants = 10;
+    const limitRestaurants = 6;
     useEffect(() => {
         firebase.auth().onAuthStateChanged((userInfo) => {
             setUser(userInfo);
@@ -46,9 +47,10 @@ export default function Restaurants(props) {
             });
     };
 
-    useEffect(() => {
-        getRestaurants();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            getRestaurants();
+        }, []));
 
     const handleLoadMore = () => {
         restaurants.length < totalRestaurants && setIsLoading(true);
@@ -56,16 +58,20 @@ export default function Restaurants(props) {
             .orderBy('createAt', 'desc')
             .startAfter(startRestaurants.data().createAt)
             .limit(limitRestaurants).get()
-            .then(result => {
+            .then(async (result) => {
                 result.docs.length > 0 ? setStartRestaurants(result.docs[result.docs.length - 1])
-                    : setIsLoading(false);
-                setRestaurants([...restaurants,
-                    result.docs.map((doc) => {
-                        const data = doc.data();
-                        data.id = doc.id; // inserto el id del restaurante en la data;
-                        return data;
-                    })
-                ]);
+                    : setIsLoading(
+                    false);
+                const restaurantsMap = await result.docs.map((doc) => {
+                    const data = doc.data();
+                    data.id = doc.id; // inserto el id del restaurante en la data;
+                    console.log("############################");
+                    console.log(doc.data());
+                    console.log("############################");
+                    return data;
+                })
+
+                setRestaurants([...restaurants, ...restaurantsMap]);
             })
     }
 
