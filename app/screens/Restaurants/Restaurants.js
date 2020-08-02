@@ -16,6 +16,7 @@ export default function Restaurants(props) {
     const [restaurants, setRestaurants] = useState([]);
     const [totalRestaurants, setTotalRestaurants] = useState(0);
     const [startRestaurants, setStartRestaurants] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const limitRestaurants = 10;
     useEffect(() => {
         firebase.auth().onAuthStateChanged((userInfo) => {
@@ -36,7 +37,7 @@ export default function Restaurants(props) {
             .get()
             .then(async (result) => {
                 setStartRestaurants(result.docs[result.docs.length - 1]);
-                const restaurantsMap = await result.docs.map((doc) => {
+                const restaurantsMap = result.docs.map((doc) => {
                     const data = doc.data();
                     data.id = doc.id; // inserto el id del restaurante en la data;
                     return data;
@@ -49,9 +50,28 @@ export default function Restaurants(props) {
         getRestaurants();
     }, []);
 
+    const handleLoadMore = () => {
+        restaurants.length < totalRestaurants && setIsLoading(true);
+        db.collection('restaurants')
+            .orderBy('createAt', 'desc')
+            .startAfter(startRestaurants.data().createAt)
+            .limit(limitRestaurants).get()
+            .then(result => {
+                result.docs.length > 0 ? setStartRestaurants(result.docs[result.docs.length - 1])
+                    : setIsLoading(false);
+                setRestaurants([...restaurants,
+                    result.docs.map((doc) => {
+                        const data = doc.data();
+                        data.id = doc.id; // inserto el id del restaurante en la data;
+                        return data;
+                    })
+                ]);
+            })
+    }
+
     return (
         <View style={styles.viewBody}>
-            <ListRestaurants restaurants={restaurants}/>
+            <ListRestaurants restaurants={restaurants} handleMore={handleLoadMore} isLoading={isLoading}/>
 
             {user && (
                 <Icon
