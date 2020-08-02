@@ -1,10 +1,10 @@
 import React from "react";
-import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
+import {ActivityIndicator, StyleSheet, Text, View} from "react-native";
 // El overlay es un modal
-import { Overlay } from "react-native-elements";
+import {Overlay} from "react-native-elements";
 
 export default function Loading(props) {
-    const { isVisible, text } = props;
+    const {isVisible, text} = props;
 
     return (
         <Overlay
@@ -13,7 +13,7 @@ export default function Loading(props) {
             backdropStyle={styles.overlayBackdrop}
         >
             <View style={styles.view}>
-                <ActivityIndicator size="large" color="#00a680" />
+                <ActivityIndicator size="large" color="#00a680"/>
                 {text && <Text style={styles.text}>{text}</Text>}
             </View>
         </Overlay>

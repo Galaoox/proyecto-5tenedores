@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Input, Button } from "react-native-elements";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {Button, Input} from "react-native-elements";
 import * as firebase from "firebase";
-import { validateEmail } from "../../utils/validations";
-import { reauthenticate } from "../../utils/api";
-import { iconPassword, iconEmail } from "../../utils/common";
+import {validateEmail} from "../../utils/validations";
+import {reauthenticate} from "../../utils/api";
+import {iconEmail, iconPassword} from "../../utils/common";
 
 export default function ChangeDisplayNameForm(props) {
-    const { email, setShowModal, toastRef, setReloadUserInfo } = props;
+    const {email, setShowModal, toastRef, setReloadUserInfo} = props;
     const [formData, setFormData] = useState(defaultValueFormData(email));
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const onChange = (event, type) => {
-        setFormData({ ...formData, [type]: event.nativeEvent.text });
+        setFormData({...formData, [type]: event.nativeEvent.text});
     };
     const onSubmit = () => {
         setErrors({});
@@ -59,7 +59,7 @@ export default function ChangeDisplayNameForm(props) {
                 .catch((error) => {
                     setIsLoading(false);
 
-                    setErrors({ password: "La contraseña es incorrecta" });
+                    setErrors({password: "La contraseña es incorrecta"});
                 });
         }
     };

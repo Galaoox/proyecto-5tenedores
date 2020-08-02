@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Overlay } from "react-native-elements";
+import {StyleSheet} from "react-native";
+import {Overlay} from "react-native-elements";
 
 export default function Modal(props) {
-    const { isVisible, setIsVisible, children } = props;
+    const {isVisible, setIsVisible, children} = props;
     const closeModal = () => setIsVisible(false);
     return (
         <Overlay

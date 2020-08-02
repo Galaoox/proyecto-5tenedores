@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { ListItem } from "react-native-elements";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {ListItem} from "react-native-elements";
 import Modal from "../Modal";
 import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
 import ChangeEmailForm from "./ChangeEmailForm";
 import ChangePasswordForm from "./ChangePasswordForm";
 
 export default function AccountOptions(props) {
-    const { toastRef, userInfo, setReloadUserInfo } = props;
+    const {toastRef, userInfo, setReloadUserInfo} = props;
     const [showModal, setShowModal] = useState(false);
     const [renderComponent, setRenderComponent] = useState(null);
     const selectedComponent = (key) => {

@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, ScrollView, Image, StyleSheet } from "react-native";
-import { Button } from "react-native-elements";
-import { useNavigation } from "@react-navigation/native";
+import {Image, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Button} from "react-native-elements";
+import {useNavigation} from "@react-navigation/native";
 
 export default function UserGuest() {
     const navigation = useNavigation();

@@ -1,31 +1,25 @@
-import React, { useState, useEffect } from "react";
-import {
-    View,
-    StyleSheet,
-    ScrollView,
-    Alert,
-    Dimensions,
-    TouchableOpacity,
-} from "react-native";
-import { Icon, Avatar, Image, Input, Button } from "react-native-elements";
-import { colors } from "../../theme/colors";
+import React, {useEffect, useState} from "react";
+import {Alert, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View,} from "react-native";
+import {Avatar, Button, Icon, Image, Input} from "react-native-elements";
+import {colors} from "../../theme/colors";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
-import { size, remove } from "lodash";
+import {size} from "lodash";
 import * as Location from "expo-location";
 import MapView from "react-native-maps";
 import Modal from "../Modal";
 import uuid from "random-uuid-v4";
 import firebase from "firebase/app";
-import { firebaseApp } from "../../utils/firebase";
+import {firebaseApp} from "../../utils/firebase";
 import "firebase/storage";
 import "firebase/firestore";
+
 const db = firebase.firestore(firebaseApp);
 
 const widthScreen = Dimensions.get("window").width; // asi obtengo el ancho de la pantalla
 
 export default function AddRestaurantForm(props) {
-    const { setIsLoading, toastRef, navigation } = props;
+    const {setIsLoading, toastRef, navigation} = props;
     /**
      * valida que el formulario este diligenciado y envia los datos a firebase
      */
@@ -109,7 +103,7 @@ export default function AddRestaurantForm(props) {
 
     return (
         <ScrollView style={styles.scrollView}>
-            <ImageRestaurant imageRestaurant={imagesSelected[0]} />
+            <ImageRestaurant imageRestaurant={imagesSelected[0]}/>
             <FormAdd
                 setRestaurantName={setRestaurantName}
                 setRestaurantAdress={setRestaurantAdress}
@@ -138,16 +132,16 @@ export default function AddRestaurantForm(props) {
 }
 
 function ImageRestaurant(props) {
-    const { imageRestaurant } = props;
+    const {imageRestaurant} = props;
     return (
         <View style={styles.viewPhoto}>
             <Image
                 source={
                     imageRestaurant
-                        ? { uri: imageRestaurant }
+                        ? {uri: imageRestaurant}
                         : require("../../../assets/img/no-image.png")
                 }
-                style={{ width: widthScreen, height: 200 }}
+                style={{width: widthScreen, height: 200}}
             />
         </View>
     );
@@ -277,7 +271,7 @@ function Map(props) {
 }
 
 function UploadImage(props) {
-    const { toastRef, setImagesSelected, imagesSelected } = props;
+    const {toastRef, setImagesSelected, imagesSelected} = props;
     const imageSelected = async () => {
         const resultPermissions = await Permissions.askAsync(
             Permissions.CAMERA_ROLL
@@ -309,7 +303,7 @@ function UploadImage(props) {
             "Eliminar imagen",
             "¿Estas seguro de que quieres eliminar la imagen?",
             [
-                { text: "Cancelar", style: "cancel" },
+                {text: "Cancelar", style: "cancel"},
                 {
                     text: "Eliminar",
                     style: "default",
@@ -342,7 +336,7 @@ function UploadImage(props) {
                         onLongPress={() => removeImage(image)}
                     >
                         <Avatar
-                            source={{ uri: image }}
+                            source={{uri: image}}
                             style={styles.miniatureStyle}
                             key={index}
                         />

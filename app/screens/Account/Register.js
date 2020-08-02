@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
+import React, {useRef} from "react";
+import {Image, StyleSheet, View} from "react-native";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scrollview";
 import Toast from 'react-native-easy-toast'
 import RegisterForm from "../../components/Account/RegisterForm";
 
@@ -14,9 +14,9 @@ export default function Register() {
                 style={styles.logo}
             />
             <View style={styles.viewForm}>
-                <RegisterForm toastRef={toastRef} />
+                <RegisterForm toastRef={toastRef}/>
             </View>
-            <Toast ref={toastRef} position="center" opacity={0.9} />
+            <Toast ref={toastRef} position="center" opacity={0.9}/>
         </KeyboardAwareScrollView>
     );
 }

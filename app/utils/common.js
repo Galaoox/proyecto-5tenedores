@@ -6,6 +6,7 @@ export function iconPassword(showPassword, setShowPassword) {
         onPress: () => setShowPassword(!showPassword),
     };
 }
+
 export const iconEmail = {
     type: "material-community",
     name: "at",
