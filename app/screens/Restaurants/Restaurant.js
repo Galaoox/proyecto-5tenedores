@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, Dimensions, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 import Carousel from '../../components/Carousel';
 import Loading from '../../components/Loading';
 import { firebaseApp } from '../../utils/firebase';
@@ -8,6 +9,7 @@ import firebase from 'firebase/app';
 import "firebase/firestore";
 import { ListItem, Rating } from 'react-native-elements';
 import Map from '../../components/Map';
+import ListReviews from '../../components/Restaurants/ListReviews';
 
 const db = firebase.firestore(firebaseApp);
 const screenWidth = Dimensions.get("window").width;
@@ -21,18 +23,22 @@ export default function Restaurant(props) {
         title: name
     });
 
-    useEffect(() => {
-        db.collection("restaurants")
-            .doc(id)
-            .get()
-            .then((response) => {
-                console.log(response);
-                const data = response.data();
-                data.id = response.id;
-                setRestaurant(data);
-                setRating(data.rating);
-            })
-    }, [])
+    useFocusEffect(
+        useCallback(() => {
+            db.collection("restaurants")
+                .doc(id)
+                .get()
+                .then((response) => {
+                    console.log(response);
+                    const data = response.data();
+                    data.id = response.id;
+                    setRestaurant(data);
+                    setRating(data.rating);
+                })
+        }, [])
+    )
+
+
 
     if (!restaurant) return <Loading isVisible={true} text="Cargando..." />;
 
@@ -41,6 +47,11 @@ export default function Restaurant(props) {
             <Carousel arrayImages={restaurant.images} height={250} width={screenWidth} />
             <TitleRestaurant name={restaurant.name} description={restaurant.description} rating={rating} />
             <RestaurantInfo location={restaurant.location} address={restaurant.address} name={restaurant.name} />
+            <ListReviews
+                navigation={navigation}
+                idRestaurant={restaurant.id}
+                setRating={setRating}
+            />
         </ScrollView>
     )
 }
