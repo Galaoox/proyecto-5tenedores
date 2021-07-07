@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Input, Button } from "react-native-elements";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {Button, Input} from "react-native-elements";
 import * as firebase from "firebase";
 
 export default function ChangeDisplayNameForm(props) {
-    const { displayName, setShowModal, toastRe, setReloadUserInfo } = props;
+    const {displayName, setShowModal, toastRe, setReloadUserInfo} = props;
     const [newDisplayName, setNewDisplayName] = useState(displayName);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);

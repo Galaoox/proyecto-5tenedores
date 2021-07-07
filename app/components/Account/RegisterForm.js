@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Input, Icon, Button } from "react-native-elements";
+import React, {useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {Button, Input} from "react-native-elements";
 import Loading from "../Loading";
-import { validateEmail } from "../../utils/validations";
-import { iconEmail, iconPassword } from "../../utils/common";
+import {validateEmail} from "../../utils/validations";
+import {iconEmail, iconPassword} from "../../utils/common";
 
-import { size, isEmpty } from "lodash";
+import {isEmpty, size} from "lodash";
 import * as firebase from "firebase";
-import { useNavigation } from "@react-navigation/native";
+import {useNavigation} from "@react-navigation/native";
 
 export default function RegisterForm(props) {
-    const { toastRef } = props;
+    const {toastRef} = props;
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
     const [formData, setFormData] = useState(defaultFormValue());
@@ -54,7 +54,7 @@ export default function RegisterForm(props) {
         }
     };
     const onChange = (event, type) => {
-        setFormData({ ...formData, [type]: event.nativeEvent.text });
+        setFormData({...formData, [type]: event.nativeEvent.text});
     };
 
     return (
@@ -91,7 +91,7 @@ export default function RegisterForm(props) {
                 buttonStyle={styles.btnRegister}
                 onPress={onSumit}
             />
-            <Loading isVisible={loading} text="Creando cuenta" />
+            <Loading isVisible={loading} text="Creando cuenta"/>
         </View>
     );
 }

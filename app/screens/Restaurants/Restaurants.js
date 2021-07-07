@@ -1,21 +1,83 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Icon } from "react-native-elements";
-import { colors } from "../../theme/colors";
-import { firebaseApp } from "../../utils/firebase";
+import React, {useCallback, useEffect, useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {Icon} from "react-native-elements";
+import {colors} from "../../theme/colors";
+import {firebaseApp} from "../../utils/firebase";
 import firebase from "firebase/app";
+import "firebase/firestore";
+import {size} from "lodash";
+import ListRestaurants from "../../components/Restaurants/ListRestaurants";
+import {useFocusEffect} from '@react-navigation/native';
+
+const db = firebase.firestore(firebaseApp);
 
 export default function Restaurants(props) {
-    const { navigation } = props;
+    const {navigation} = props;
     const [user, setUser] = useState(null);
+    const [restaurants, setRestaurants] = useState([]);
+    const [totalRestaurants, setTotalRestaurants] = useState(0);
+    const [startRestaurants, setStartRestaurants] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const limitRestaurants = 6;
     useEffect(() => {
         firebase.auth().onAuthStateChanged((userInfo) => {
             setUser(userInfo);
         });
     }, []);
+    /**
+     * Obtiene los datos de los restaurantes que se encuentran en la bd
+     */
+    const getRestaurants = () => {
+        db.collection("restaurants")
+            .get()
+            .then((result) => setTotalRestaurants(size(result)));
+
+        db.collection("restaurants")
+            .orderBy("createAt", "desc")
+            .limit(limitRestaurants)
+            .get()
+            .then(async (result) => {
+                setStartRestaurants(result.docs[result.docs.length - 1]);
+                const restaurantsMap = result.docs.map((doc) => {
+                    const data = doc.data();
+                    data.id = doc.id; // inserto el id del restaurante en la data;
+                    return data;
+                })
+                setRestaurants(restaurantsMap);
+            });
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            getRestaurants();
+        }, []));
+
+    const handleLoadMore = () => {
+        restaurants.length < totalRestaurants && setIsLoading(true);
+        db.collection('restaurants')
+            .orderBy('createAt', 'desc')
+            .startAfter(startRestaurants.data().createAt)
+            .limit(limitRestaurants).get()
+            .then(async (result) => {
+                result.docs.length > 0 ? setStartRestaurants(result.docs[result.docs.length - 1])
+                    : setIsLoading(
+                    false);
+                const restaurantsMap = await result.docs.map((doc) => {
+                    const data = doc.data();
+                    data.id = doc.id; // inserto el id del restaurante en la data;
+                    console.log("############################");
+                    console.log(doc.data());
+                    console.log("############################");
+                    return data;
+                })
+
+                setRestaurants([...restaurants, ...restaurantsMap]);
+            })
+    }
+
     return (
         <View style={styles.viewBody}>
-            <Text>Restaurans....</Text>
+            <ListRestaurants restaurants={restaurants} handleMore={handleLoadMore} isLoading={isLoading}/>
 
             {user && (
                 <Icon
@@ -43,7 +105,7 @@ const styles = StyleSheet.create({
         bottom: 10,
         right: 10,
         shadowColor: "black",
-        shadowOffset: { width: 2, height: 2 },
+        shadowOffset: {width: 2, height: 2},
         shadowOpacity: 0.5,
     },
 });

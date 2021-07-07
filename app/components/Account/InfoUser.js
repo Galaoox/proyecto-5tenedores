@@ -1,13 +1,13 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Avatar } from "react-native-elements";
+import {StyleSheet, Text, View} from "react-native";
+import {Avatar} from "react-native-elements";
 import * as firebase from "firebase";
 import * as Permissions from "expo-permissions";
 import * as ImagePicker from "expo-image-picker";
 
 export default function InfoUser(props) {
     const {
-        userInfo: { uid, photoURL, displayName, email },
+        userInfo: {uid, photoURL, displayName, email},
         toastRef,
         setLoading,
         setlLoadingText,
@@ -84,7 +84,7 @@ export default function InfoUser(props) {
                 containerStyle={styles.userInfoAvatar}
                 source={
                     photoURL
-                        ? { uri: photoURL }
+                        ? {uri: photoURL}
                         : require("../../../assets/img/avatar-default.jpg")
                 }
                 showAccessory

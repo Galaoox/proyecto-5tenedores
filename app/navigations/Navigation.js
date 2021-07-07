@@ -1,7 +1,7 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Icon } from 'react-native-elements';
+import {NavigationContainer} from "@react-navigation/native";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {Icon} from 'react-native-elements';
 // Stacks
 import RestaurantsStack from "./RestaurantsStack";
 import FavoritesStack from "./FavoritesStack";
@@ -28,8 +28,8 @@ export default function Navigation() {
                     inactiveTintColor: "#646464",
                     activeTintColor: "#00a680"
                 }}
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ color }) => screenOptions(route, color),
+                screenOptions={({route}) => ({
+                    tabBarIcon: ({color}) => screenOptions(route, color),
                 })}
             >
                 <Tab.Screen
@@ -75,11 +75,10 @@ export default function Navigation() {
 }
 
 
-
 /**
  * Funcion que retorna el icono que se usara en la navegacion con el color
  * @param {*} route identificador de la ruta
- * @param {*} color 
+ * @param {*} color
  */
 function screenOptions(route, color) {
     let iconName;
@@ -103,6 +102,6 @@ function screenOptions(route, color) {
             break;
     }
     return (
-        <Icon type="material-community" name={iconName} size={22} color={color} />
+        <Icon type="material-community" name={iconName} size={22} color={color}/>
     )
 }

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Input, Button } from "react-native-elements";
+import React, {useState} from "react";
+import {StyleSheet, Text, View} from "react-native";
+import {Button, Input} from "react-native-elements";
 import * as firebase from "firebase";
-import { reauthenticate } from "../../utils/api";
-import { iconPassword } from "../../utils/common";
-import { size } from "lodash";
+import {reauthenticate} from "../../utils/api";
+import {iconPassword} from "../../utils/common";
+import {size} from "lodash";
 
 export default function ChangePasswordForm(props) {
-    const { setShowModal, toastRef } = props;
+    const {setShowModal, toastRef} = props;
     const [isLoading, setIsLoading] = useState(false);
     const [showActualPassword, setShowActualPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
@@ -15,7 +15,7 @@ export default function ChangePasswordForm(props) {
     const [formData, setFormData] = useState(defaultValueFormData());
     const [errors, setErrors] = useState({});
     const onChange = (event, type) => {
-        setFormData({ ...formData, [type]: event.nativeEvent.text });
+        setFormData({...formData, [type]: event.nativeEvent.text});
     };
     const onSubmit = async () => {
         let isSetError = true;

@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Button } from "react-native-elements";
+import React, {useEffect, useRef, useState} from "react";
+import {StyleSheet, View} from "react-native";
+import {Button} from "react-native-elements";
 import Toast from "react-native-easy-toast";
 import * as firebase from "firebase";
 import Loading from "../../components/Loading";
@@ -47,8 +47,8 @@ export default function UserLogged() {
                     firebase.auth().signOut();
                 }}
             />
-            <Toast ref={toastRef} position="center" opacity={0.9} />
-            <Loading text={loadingText} isVisible={loading} />
+            <Toast ref={toastRef} position="center" opacity={0.9}/>
+            <Loading text={loadingText} isVisible={loading}/>
         </View>
     );
 }
